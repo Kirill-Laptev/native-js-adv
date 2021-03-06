@@ -1,3 +1,4 @@
+import { useDispatch as _useDispatch } from 'react-redux';
 
 // В этом объекте будут хранится константы, которые мы сможем доставать через ACTIONS_TYPE.
 // Пример ACTIONS_TYPE.CHANGE_CHANGE_ACTION
@@ -55,3 +56,16 @@ export const СhangeCurrentCurrencyAC = (currentCurrency: string): ChangeCurrent
 };
 
 export type CurrencyReducersTypes = ChangeCurrencyFieldType | ChangeAction | ChangeCurrentCurrencyType;
+
+// Так как у хука useDispatch нет типизации и он может принимать любые типы экшенов 
+// - нам необходимо его модифицировать.
+// Сперва экспортируем его таким образом под другим именем - import { useDispatch as _useDispatch } from 'react-redux';
+// По итогу useDispatch модифицированный будет возвращать функцию, которая принимает AC, и как раз туда мы передали
+// типизацию всех наших action'ов. 
+// В свою очеред эта функция возвращает другую функцию, которая уже занимается обычной передачей AC (который,
+// превращается в объект action) в reducer.
+
+export const useDispatch = () => {
+    const dispatch = _useDispatch()
+    return (ac: CurrencyReducersTypes) => dispatch(ac)
+}
