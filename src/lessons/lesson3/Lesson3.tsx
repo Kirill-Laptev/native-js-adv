@@ -2,21 +2,22 @@ import React, { useState, ChangeEvent } from 'react';
 import API from './API';
 import './lesson_3';
 
-type SearchResultType = {
-    [key: string]: string
-}
 
 const Lesson3 = () => {
-    const [searchName, setSearchName] = useState<string>('');
-    const [searchResult, setSearchResult] = useState<SearchResultType>({});
-    const [searchNameByType, setSearchNameByType] = useState<string>('');
-    const [searchResultByType, setSearchResultByType] = useState<SearchResultType>({});
+    const [searchName, setSearchName] = useState('');
+    const [searchResult, setSearchResult] = useState('');
+    const [searchNameByType, setSearchNameByType] = useState('');
+    const [searchResultByType, setSearchResultByType] = useState('');
 
     const searchFilm = () => {
         API.searchFilmsByTitle(searchName)
         .then(({data}) => {
-            setSearchResult(data)
             console.log(data)
+            if(data.Response === 'True'){
+                setSearchResult(JSON.stringify(data.Search))
+            } else {
+                setSearchResult(data.Error)
+            }
         })
     };
 
@@ -25,7 +26,11 @@ const Lesson3 = () => {
         API.searchFilmsByType(searchNameByType, type)
         .then(({data}) => {
             console.log(data)
-            setSearchResultByType(data)
+            if(data.Response === 'True'){
+                setSearchResultByType(JSON.stringify(data.Search))
+            } else{
+                setSearchResultByType(data.Error)
+            }
         })
     }
 
@@ -37,18 +42,7 @@ const Lesson3 = () => {
         setSearchNameByType(e.currentTarget.value)
     }
 
-    const viewSearchResult = (result: SearchResultType) => {
-        if(Object.keys(result).length > 0) {
-            return (<div>
-                <img src={result.Poster} />
-                <div>Released: {result.Released}</div>
-                <div>IMDB rating: {result.imdbRating}</div>
-                <div>Decription: {result.Plot}</div>
-                </div>)
-        } else{
-            return null
-        }
-    }
+
 
     return (
         <div>
@@ -58,17 +52,16 @@ const Lesson3 = () => {
                 <input type="text" value={searchName} onChange={onSearchName}/>
                 <button onClick={searchFilm}>Search</button>
                 <div>
-                   {viewSearchResult(searchResult)}
+                    {searchResult}
                 </div>
             </div>
-
             <div>
                 <h3><p>Search by type:</p></h3>
                 <input type="text" value={searchNameByType} onChange={onSearchNameByType}/>
                 <button onClick={searchByType} data-t='movie'>Movie</button>
                 <button onClick={searchByType} data-t='series'>Series</button>
                 <div>
-                    {viewSearchResult(searchResultByType)}
+                    {searchResultByType}
                 </div>
             </div>
         </div>
