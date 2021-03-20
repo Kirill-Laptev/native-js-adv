@@ -9,17 +9,35 @@ const Lesson3 = () => {
     const [searchNameByType, setSearchNameByType] = useState('');
     const [searchResultByType, setSearchResultByType] = useState('');
 
-    const searchFilm = () => {
-        API.searchFilmsByTitle(searchName)
-        .then(({data}) => {
-            console.log(data)
-            if(data.Response === 'True'){
-                setSearchResult(JSON.stringify(data.Search))
-            } else {
-                setSearchResult(data.Error)
-            }
-        })
+    //  Стандартно promise с then() 
+
+    // const searchFilm = () => {
+    //     API.searchFilmsByTitle(searchName)
+    //     .then(({data}) => {
+    //         console.log(data)
+    //         if(data.Response === 'True'){
+    //             setSearchResult(JSON.stringify(data.Search))
+    //         } else {
+    //             setSearchResult(data.Error)
+    //         }
+    //     })
+    // };
+
+    // Переписываем на async await.
+    // Вс будет работать ровно так же.
+    // data сразу достаем деструктуризацией.
+
+    const searchFilm = async () => {
+        try{
+            const {data} = await API.searchFilmsByTitle(searchName)
+            data.Response === 'True'
+            ? setSearchResult(JSON.stringify(data.Search))
+            : setSearchResult(data.Error)
+        } catch(err){
+            console.log(err)
+        }
     };
+
 
     const searchByType = (e: React.MouseEvent<HTMLButtonElement>) => {
         const type: string = e.currentTarget.dataset.t ? e.currentTarget.dataset.t : '';
