@@ -26,14 +26,25 @@ console.log('Lesson 5');
 // Функция должна вернуть строку `My name is ${name}. I am ${age}`, где name и age берутся из свойств объекта
 
 type someObjType = {
-    name: string;
-    age: number;
+    name: string
+    age: number
+    greeting?: Function
 }
 
 let someObj:someObjType = {
     name: 'Eugene',
     age: 32
 }
+
+function greeting () {
+    //@ts-ignore
+    return `My name is ${this.name}, my age ${this.age}`
+}
+
+someObj.greeting = greeting
+console.log(someObj.greeting())
+
+
 
 // Task 02
 // реализовать счетчик counter в виде объекта со следующими методами:
@@ -44,13 +55,107 @@ let someObj:someObjType = {
 // rest current count - устанавливает значение счетчика равным 0
 // все методы должны ссылаться на сам объект
 
+// type CounterType = {
+//     count: number
+//     getCurrentCount: () => void
+//     increment: () => void
+//     decrement: () => void
+//     setCurrentCount: (num: number) => void
+//     resetCurrentCount: () => void
+// }
+
+// const counter: CounterType = {
+//     count: 0,
+//     getCurrentCount() {
+//         return console.log(this.count)
+//     },
+//     increment(){
+//         this.count += 1
+//     },
+//     decrement(){
+//         this.count -= 1
+//     },
+//     setCurrentCount(num: number){
+//         this.count = num
+//     },
+//     resetCurrentCount(){
+//         this.count = 0
+//     }
+// }
+
+// counter.increment()
+// counter.increment()
+// counter.getCurrentCount()
+// counter.decrement()
+// counter.setCurrentCount(10)
+// counter.getCurrentCount()
+// counter.resetCurrentCount()
+// counter.getCurrentCount()
+
+
+
+
 // Task 03
 // переделайте код из Task 02, что бы сработал следующий код:
 // counter.setCurrentCount(10).increment().increment().increment().decrement().getCurrentCount() // 12
 
+// Такое описание типа тоже можно делать
+type CounterType = {
+    count: number
+    getCurrentCount: () => void
+    increment: () => CounterType
+    decrement: () => CounterType
+    setCurrentCount: (num: number) => CounterType
+    resetCurrentCount: () => CounterType
+}
+
+const counter: CounterType = {
+    count: 0,
+    getCurrentCount() {
+        return console.log(this.count)
+    },
+    increment(){
+        this.count += 1
+        return this
+    },
+    decrement(){
+        this.count -= 1
+        return this
+    },
+    setCurrentCount(num: number){
+        this.count = num
+        return this
+    },
+    resetCurrentCount(){
+        this.count = 0
+        return this
+    }
+}
+
+counter.setCurrentCount(10).increment().increment().increment().decrement().getCurrentCount() // 12
+
+
+
 // Task 04
 // Написать функцию конструктор myFirstConstructorFunc которая принимает 2 параметра name и age и возвращает объект
 // у которого будут эти свойства и метод greeting из Task 01
+
+function MyFirstConstructorFunc (name: string, age: number) {
+    // @ts-ignore
+    this.name = name
+    // @ts-ignore
+    this.age = age
+    // @ts-ignore
+    this.greeting = function greeting (){
+        return `My name is ${this.name}, my age ${this.age}`
+    }
+}   
+
+// @ts-ignore
+const newObj = new MyFirstConstructorFunc('Kirill', 26)
+console.log(newObj)
+console.log(newObj.greeting)
+
 
 // Task 05 есть 2 объекта One и Two. С помощью bind и метода sayHello заставьте поздороваться объект One
 
