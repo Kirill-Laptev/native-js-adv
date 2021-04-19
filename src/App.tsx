@@ -6,9 +6,9 @@ import './App.css';
 // import Lesson4 from './lessons/lesson4/Lesson4';
 // import './lessons/lesson5/lesson5';
 // import './lessons/lesson6/lesson6';
-import './lessons/lesson7/lesson7.ts';
-import './lessons/lesson7/lesson7.js';
-// import './lessons/lesson8/lesson8';
+// import './lessons/lesson7/lesson7.ts';
+// import './lessons/lesson7/lesson7.js';
+import './lessons/lesson8/lesson8';
 
 function App() {
     return (
